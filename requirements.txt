@@ -1,0 +1,8 @@
+flask
+flask-socketio
+transformers
+torch
+pandas
+pyyaml
+python-dotenv
+requests

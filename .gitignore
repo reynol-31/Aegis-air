@@ -1,0 +1,61 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.py.class
+*.egg-info/
+*.egg
+*.log
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# IDE & Editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# === Flask / Logs ===
+*.db
+instance/
+logs/
+dummy_webapp/logs.txt
+*.sqlite3
+*.sqlite
+
+# === Cache & Temp ===
+*.cache
+*.bak
+*.swp
+*.tmp
+
+# === Frontend ===
+node_modules/
+dist/
+build/
+*.env
+.env.*
+
+# === Model / Security Files ===
+*.pt
+*.bin
+*.pkl
+*.h5
+*.ckpt
+*.model
+denylist.txt
+incidents.json
+incidents.log
+
+# === Misc ===
+# Ignore local test or experiment folders
+__test__/
+__experiments__/
