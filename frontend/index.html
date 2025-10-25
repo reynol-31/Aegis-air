@@ -2,55 +2,85 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>AegisAIR Dashboard</title>
+    <title>AegisAIR — Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      body{ font-family: Arial, Helvetica, sans-serif; margin: 20px; max-width: 900px; }
-      header { display:flex; align-items:center; justify-content:space-between; }
-      h1 { margin: 0; font-size: 1.4rem; }
-      button { padding: 8px 12px; }
-      .panel { border: 1px solid #ddd; padding: 12px; margin-top: 12px; border-radius: 6px; }
-      .benign { background:#e6ffed; padding:6px; border-radius:4px; margin:6px 0 }
-      .malicious { background:#ffe6e6; padding:6px; border-radius:4px; margin:6px 0 }
-      pre { max-height: 300px; overflow: auto; background:#f9f9f9; padding:8px; }
-      ul { padding-left: 18px; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <header>
-      <h1>AegisAIR — SecBERT Demo Dashboard</h1>
+    <header class="header">
+      <div class="brand">
+        <div class="logo">A</div>
+        <div>
+          <div class="title">AegisAIR</div>
+          <div class="subtitle">AI-driven automated incident response</div>
+        </div>
+      </div>
       <div>
-        <button onclick="refresh()">Refresh</button>
-        <button onclick="openDemo()">Open Demo Site</button>
+        <button class="btn" onclick="refresh()">Refresh</button>
+        <button class="btn ghost" onclick="openDemo()">Open Demo Site</button>
       </div>
     </header>
 
-    <div class="panel">
-      <h3>Live Controls</h3>
-      <p>
-        Use the demo site endpoints to generate events:
-        <code>/</code>, <code>/login</code> (POST), <code>/api/data</code>, <code>/admin</code>.
-      </p>
-      <p>
-        Example brute-force (on terminal):<br/>
-        <code>for i in {1..10}; do curl -s -X POST http://127.0.0.1:8000/login -d "user=admin&pass=wrong"; done</code>
-      </p>
-    </div>
+    <main class="grid">
+      <section>
+        <div class="card">
+          <div class="section-title">
+            <div><strong>Live Controls</strong></div>
+            <div class="small">Interact with the demo site to generate traffic</div>
+          </div>
+          <div class="controls">
+            <button class="btn" onclick="simulate('page')">Page View</button>
+            <button class="btn" onclick="simulate('api')">API Request</button>
+            <button class="btn" onclick="simulate('login-ok')">Successful Login</button>
+            <button class="btn" onclick="simulate('login-fail')">Failed Login</button>
+            <button class="btn" onclick="simulate('admin')">Admin Access</button>
+            <button class="btn ghost" onclick="runAttack()">Run Attack Script</button>
+          </div>
 
-    <div class="panel">
-      <h3>Denylist</h3>
-      <ul id="denylist">Loading...</ul>
-    </div>
+          <div class="stats" style="margin-top:12px">
+            <div class="stat">
+              <div class="num" id="stat-req">—</div>
+              <div class="label">Requests (last poll)</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="stat-block">—</div>
+              <div class="label">Blocked IPs</div>
+            </div>
+            <div class="stat">
+              <div class="num" id="stat-incs">—</div>
+              <div class="label">Incidents</div>
+            </div>
+          </div>
 
-    <div class="panel">
-      <h3>Incidents (latest)</h3>
-      <pre id="incidents">Loading...</pre>
-    </div>
+          <div class="logs">
+            <div class="section-title"><div><strong>Recent Logs</strong></div></div>
+            <div id="logs" class="log-list">Loading...</div>
+          </div>
+        </div>
 
-    <div class="panel">
-      <h3>Recent Logs (tail of dummy_webapp/logs.txt)</h3>
-      <pre id="logs">Loading...</pre>
-    </div>
+        <div style="height:12px"></div>
+
+        <div class="card">
+          <div class="section-title"><div><strong>Activity</strong></div></div>
+          <div id="incidents" style="display:flex;flex-direction:column;gap:8px"></div>
+        </div>
+      </section>
+
+      <aside class="side">
+        <div class="card">
+          <div class="section-title"><div><strong>Denylist</strong></div><div class="small">Auto-blocked IPs</div></div>
+          <ul id="denylist" class="denylist"></ul>
+        </div>
+
+        <div class="card">
+          <div class="section-title"><div><strong>System</strong></div></div>
+          <div class="small">Model: <strong>SecBERT (demo)</strong></div>
+          <div class="small" style="margin-top:6px">Backend: <strong>Flask</strong></div>
+          <div style="height:8px"></div>
+          <div class="small">Tip: Click <strong>Failed Login</strong> multiple times to simulate brute-force.</div>
+        </div>
+      </aside>
+    </main>
 
     <script src="dashboard.js"></script>
   </body>

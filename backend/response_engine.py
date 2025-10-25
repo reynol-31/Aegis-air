@@ -53,7 +53,8 @@ def run_playbook(event, denylist_path="denylist.txt", incidents_log_path="incide
             if ip not in denylist:
                 with open(denylist_path, "a", encoding="utf-8") as f:
                     f.write(ip + "\n")
-                entry = f"{datetime.datetime.utcnow().isoformat()} - IP {ip} blocked due to multiple failed logins"
+                # Use an explicit UTC ISO8601 timestamp with 'Z' suffix (UTC) for clarity
+                entry = f"{datetime.datetime.now(datetime.timezone.utc).isoformat().replace('+00:00','Z')} - IP {ip} blocked due to multiple failed logins"
                 _write_incident(incidents_log_path, entry)
                 incidents.append(entry)
 

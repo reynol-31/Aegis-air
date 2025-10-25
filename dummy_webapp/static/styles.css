@@ -1,0 +1,19 @@
+:root{
+  --teal:#5A827E; --teal2:#84AE92; --bg:#f6fbf9; --muted:#6b7280;
+}
+*{box-sizing:border-box}
+body{ font-family: Inter, system-ui, -apple-system, Roboto, Arial; background:linear-gradient(180deg,#f8fdfb,#f3fbff); margin:0; padding:24px;}
+.wrap{ max-width:920px; margin:0 auto;}
+.site-header{ display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+.logo{ width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--teal2),var(--teal));color:white;display:flex;align-items:center;justify-content:center;font-weight:700; font-size:16px;}
+.desc{ color:var(--muted) }
+.panel{ display:grid; grid-template-columns: 1fr 420px; gap:14px;}
+.box{ background:white; border-radius:12px; padding:14px; box-shadow: 0 8px 22px rgba(10,20,30,0.04); border:1px solid rgba(10,20,30,0.03)}
+.box h3{ margin:0 0 10px 0}
+input{ display:block; width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6eef0; margin-bottom:8px; font-size:14px}
+.row{ display:flex; gap:8px; align-items:center}
+.btn{ background:var(--teal2); color:white; border:none; padding:8px 12px; border-radius:10px; cursor:pointer; font-weight:600}
+.btn.ghost{ background:transparent; color:var(--teal); border:1px solid rgba(90,130,126,0.12)}
+.small{ color:var(--muted); font-size:13px}
+.logs-area .feed{ background:#0b17201a; padding:10px; border-radius:8px; font-family: ui-monospace, monospace; min-height:64px}
+@media(max-width:980px){ .panel{ grid-template-columns:1fr } }

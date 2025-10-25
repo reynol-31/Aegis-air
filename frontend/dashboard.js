@@ -1,52 +1,87 @@
-// frontend/dashboard.js
-const BACKEND_URL = "http://127.0.0.1:5000"; // change if your backend uses another host/port
+const BACKEND_URL = "http://127.0.0.1:5000"; // backend
 
 async function refresh(){
+  // UI elements
   const d = document.getElementById('denylist')
-  const incPre = document.getElementById('incidents')
+  const incCont = document.getElementById('incidents')
   const logsPre = document.getElementById('logs')
+  const statReq = document.getElementById('stat-req')
+  const statBlock = document.getElementById('stat-block')
+  const statInc = document.getElementById('stat-incs')
 
-  d.innerHTML = ''
-  incPre.textContent = ''
-  logsPre.textContent = ''
+  d.innerHTML = ''; incCont.innerHTML=''; logsPre.textContent='Loading...'
+  statReq.textContent = '—'; statBlock.textContent = '—'; statInc.textContent = '—'
 
   try {
-    const res1 = await fetch(`${BACKEND_URL}/denylist`)
-    if (!res1.ok) throw new Error(`denylist ${res1.status}`)
-    const deny = await res1.json()
-    if (deny.length === 0) {
-      d.innerHTML = '<li>(none)</li>'
-    } else {
-      deny.forEach(ip => { const li = document.createElement('li'); li.textContent = ip; d.appendChild(li) })
-    }
+    const logsRes = await fetch(`${BACKEND_URL}/logs_tail`)
+    const logsTxt = await logsRes.text()
+    logsPre.textContent = logsTxt || '(no logs)'
+    const lines = logsTxt.split('\n').filter(l=>l.trim()); statReq.textContent = lines.length
   } catch (e) {
-    d.innerHTML = `<li>Failed to load denylist: ${e.message}</li>`
+    logsPre.textContent = 'Failed to load logs: ' + e.message
   }
 
   try {
     const res2 = await fetch(`${BACKEND_URL}/incidents`)
-    if (!res2.ok) throw new Error(`incidents ${res2.status}`)
     const inc = await res2.json()
-    if (inc.length === 0) incPre.textContent = '(no incidents logged yet)'
-    else incPre.textContent = inc.slice(-50).join('\n')
+    if (inc && inc.length) {
+      incCont.innerHTML = ''
+      inc.slice(-10).reverse().forEach(i=>{
+        const el = document.createElement('div')
+        el.className = 'incident'
+        el.innerHTML = `<div style="width:8px;height:8px;border-radius:6px;background:#ef4444;margin-top:6px"></div>
+                        <div><div class="text">${i}</div><div class="meta">${new Date().toLocaleString()}</div></div>`
+        incCont.appendChild(el)
+      })
+      statInc.textContent = inc.length
+    } else {
+      incCont.innerHTML = '<div class="small">(no incidents)</div>'
+      statInc.textContent = 0
+    }
   } catch (e) {
-    incPre.textContent = `Failed to load incidents: ${e.message}`
+    incCont.innerHTML = `<div class="small">Failed to load incidents: ${e.message}</div>`
   }
 
   try {
-    const res3 = await fetch(`${BACKEND_URL}/logs_tail`)
-    if (!res3.ok) throw new Error(`logs_tail ${res3.status}`)
-    const logs = await res3.text()
-    logsPre.textContent = logs || '(no logs)'
+    const res3 = await fetch(`${BACKEND_URL}/denylist`)
+    const deny = await res3.json()
+    d.innerHTML = ''
+    if (!deny || deny.length === 0) d.innerHTML = '<li>(none)</li>'
+    else deny.forEach(ip => {
+      const li = document.createElement('li'); li.textContent = ip; d.appendChild(li)
+    })
+    statBlock.textContent = (deny||[]).length
   } catch (e) {
-    logsPre.textContent = `Failed to load logs: ${e.message}`
+    d.innerHTML = `<li>Failed to load denylist: ${e.message}</li>`
   }
 }
 
-function openDemo(){
-  window.open('http://127.0.0.1:8000', '_blank')
+function openDemo(){ window.open('http://127.0.0.1:8000/static/index.html', '_blank') }
+
+// simple remote simulate actions by calling dummy webapp endpoints
+async function simulate(kind){
+  const base = "http://127.0.0.1:8000"
+  try {
+    if (kind === 'page') await fetch(`${base}/`)
+    if (kind === 'api') await fetch(`${base}/api/data`)
+    if (kind === 'login-ok') await fetch(`${base}/login`, {method:'POST', body: new URLSearchParams({user:'alice', pass:'wonderland'})})
+    if (kind === 'login-fail') await fetch(`${base}/login`, {method:'POST', body: new URLSearchParams({user:'admin', pass:'wrong'})})
+    if (kind === 'admin') await fetch(`${base}/admin`)
+  } catch (e) {
+    console.warn('simulate error', e)
+  }
+  // refresh dashboard after small delay
+  setTimeout(refresh, 600)
 }
 
-// auto-refresh every 3s
-setInterval(refresh, 3000)
+async function runAttack(){
+  // call backend endpoint to run attack if you implemented it; otherwise call local script
+  // fallback: trigger a burst of client calls
+  for (let i=0;i<8;i++){
+    simulate('page'); simulate('login-fail'); simulate('api');
+  }
+  setTimeout(refresh, 800)
+}
+
+setInterval(refresh, 10000)
 refresh()
