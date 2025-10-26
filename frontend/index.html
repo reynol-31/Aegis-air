@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>AegisAIR — Dashboard</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -16,8 +17,8 @@
         </div>
       </div>
       <div>
-        <button class="btn" onclick="refresh()">Refresh</button>
-        <button class="btn ghost" onclick="openDemo()">Open Demo Site</button>
+        <button class="btn" onclick="refresh()" aria-label="Refresh dashboard">Refresh</button>
+        <button class="btn ghost" onclick="openDemo()" aria-label="Open demo site">Open Demo Site</button>
       </div>
     </header>
 
@@ -29,12 +30,12 @@
             <div class="small">Interact with the demo site to generate traffic</div>
           </div>
           <div class="controls">
-            <button class="btn" onclick="simulate('page')">Page View</button>
-            <button class="btn" onclick="simulate('api')">API Request</button>
-            <button class="btn" onclick="simulate('login-ok')">Successful Login</button>
-            <button class="btn" onclick="simulate('login-fail')">Failed Login</button>
-            <button class="btn" onclick="simulate('admin')">Admin Access</button>
-            <button class="btn ghost" onclick="runAttack()">Run Attack Script</button>
+            <button class="btn" onclick="simulate('page')" aria-label="Simulate page view">Page View</button>
+            <button class="btn" onclick="simulate('api')" aria-label="Simulate API request">API Request</button>
+            <button class="btn" onclick="simulate('login-ok')" aria-label="Simulate successful login">Successful Login</button>
+            <button class="btn" onclick="simulate('login-fail')" aria-label="Simulate failed login">Failed Login</button>
+            <button class="btn" onclick="simulate('admin')" aria-label="Simulate admin access">Admin Access</button>
+            <button class="btn ghost" onclick="runAttack()" aria-label="Run attack script">Run Attack Script</button>
           </div>
 
           <div class="stats" style="margin-top:12px">
